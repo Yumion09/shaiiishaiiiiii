@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#dff3ff" />
+<title>A Little Blue Garden for Shai 💙</title>
+<style>
+  :root {
+    --ink: #23456c;
+    --navy: #173c67;
+    --blue: #72bce9;
+    --sky: #c7eaff;
+    --pale: #eff9ff;
+    --white: #fffdfd;
+    --pink: #f3b9d0;
+    --shadow: 0 22px 60px rgba(52, 111, 160, .15);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; min-height: 100vh; overflow-x: hidden; color: var(--ink);
+    font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+    background:
+      radial-gradient(circle at 8% 10%, rgba(255,255,255,.95) 0 2px, transparent 3px),
+      radial-gradient(circle at 88% 23%, rgba(255,255,255,.8) 0 3px, transparent 4px),
+      linear-gradient(155deg, #e9f8ff 0%, #d5efff 37%, #f0f8ff 68%, #d7edff 100%);
+    background-size: 100px 100px, 140px 140px, auto;
+  }
+  button { font: inherit; }
+  button:focus-visible { outline: 3px solid #397eb6; outline-offset: 4px; }
+  .sky-decor { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .cloud { position: absolute; width: 150px; height: 45px; border-radius: 50px; background: rgba(255,255,255,.56); filter: blur(.3px); animation: cloudDrift 32s linear infinite; }
+  .cloud::before, .cloud::after { content:""; position:absolute; background:inherit; border-radius:50%; }
+  .cloud::before { width:65px;height:65px;left:24px;bottom:7px; }
+  .cloud::after { width:84px;height:78px;right:20px;bottom:1px; }
+  .cloud.c1 { top: 13%; left:-190px; transform:scale(.8); }
+  .cloud.c2 { top: 64%; left:-220px; animation-delay:-13s; transform:scale(1.15); opacity:.5; }
+  .cloud.c3 { top: 34%; left:-250px; animation-delay:-22s; transform:scale(.62); opacity:.6; }
+  .star { position:absolute; color:rgba(80,151,203,.48); font-size:18px; animation: twinkle 3.2s ease-in-out infinite; }
+  .star.s1 {top:17%;left:8%}.star.s2 {top:26%;right:9%;animation-delay:.8s}.star.s3 {top:72%;left:6%;animation-delay:1.4s}.star.s4 {top:82%;right:11%;animation-delay:.4s}
+  .page { position:relative; z-index:1; width:min(1120px, calc(100% - 30px)); margin:0 auto; padding:22px 0 44px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:6px 3px 20px; }
+  .brand { display:flex; align-items:center; gap:10px; font-size:14px; letter-spacing:.08em; text-transform:uppercase; font-weight:800; color:#477ca7; }
+  .brand-mark { display:grid; place-items:center; width:34px;height:34px;border-radius:13px; background:rgba(255,255,255,.72); box-shadow:0 5px 17px #7eb3d522; font-size:18px; }
+  .sound-toggle { border:1px solid rgba(90,147,190,.22); background:rgba(255,255,255,.68); color:#3b6b91; padding:10px 14px; border-radius:999px; box-shadow:0 5px 20px rgba(65,128,175,.08); cursor:pointer; transition:.2s ease; font-weight:700; font-size:13px; }
+  .sound-toggle:hover { transform:translateY(-2px); background:#fff; }
+  .hero { text-align:center; padding:26px 14px 28px; animation: fadeUp .8s ease both; }
+  .eyebrow { display:inline-flex; align-items:center; gap:7px; border:1px solid rgba(106,169,211,.25); background:rgba(255,255,255,.66); border-radius:999px; padding:8px 13px; color:#5087b2; font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+  h1 { margin:18px auto 12px; max-width:790px; font-family: Georgia, "Times New Roman", serif; font-weight:500; color:#204a76; font-size:clamp(2.15rem, 5vw, 4rem); line-height:1.12; letter-spacing:-.04em; }
+  h1 .shai { color:#478fc7; font-style:italic; white-space:nowrap; }
+  .hero p { max-width:610px; margin:0 auto; color:#5a7e9f; font-size:clamp(.96rem, 2vw, 1.08rem); line-height:1.75; }
+  .tiny-heart { display:inline-block; color:#82bfe8; animation: heartbeat 1.8s ease-in-out infinite; }
+  .garden { display:grid; grid-template-columns:minmax(0, 1.1fr) minmax(320px, .9fr); gap:20px; align-items:stretch; margin-top:16px; }
+  .paper-card { position:relative; border:1px solid rgba(255,255,255,.88); background:linear-gradient(145deg, rgba(255,255,255,.86), rgba(244,251,255,.74)); border-radius:30px; box-shadow:var(--shadow); overflow:hidden; }
+  .flower-card { min-height:545px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 22px 21px; }
+  .flower-card::before { content:""; position:absolute; width:280px;height:280px; border-radius:50%; top:70px; left:50%; transform:translateX(-50%); background:radial-gradient(circle, rgba(153,211,247,.32), rgba(255,255,255,0) 70%); }
+  .section-kicker { position:relative; z-index:1; font-size:11px; letter-spacing:.13em; font-weight:900; text-transform:uppercase; color:#72a2c7; }
+  .flower-stage { position:relative; z-index:1; width:min(100%, 410px); margin:6px auto -2px; cursor:pointer; touch-action:manipulation; }
+  #flowerSvg { display:block; width:100%; height:auto; overflow:visible; filter:drop-shadow(0 14px 12px rgba(43,99,149,.12)); transform-origin:50% 75%; animation:flowerFloat 5.5s ease-in-out infinite; }
+  #flowerSvg .flower-head { transform-origin:210px 185px; animation: bloomIn 1.35s cubic-bezier(.2,.83,.28,1.16) both; }
+  #flowerSvg .petal { transform-box:fill-box; transform-origin:center; }
+  .flower-stage:focus-visible { outline:3px solid #397eb6; outline-offset:5px; border-radius:35px; }
+  .flower-caption { text-align:center; position:relative; z-index:1; margin-top:-1px; }
+  .flower-caption h2 { margin:0 0 6px; font-family:Georgia,serif; font-weight:500; font-size:1.45rem; color:#315e86; }
+  .flower-caption p { margin:0; color:#7594ad; font-size:.87rem; }
+  .primary-btn { margin-top:17px; border:0; cursor:pointer; color:white; background:linear-gradient(135deg,#79bfea,#559bd3); border-radius:999px; padding:12px 19px; box-shadow:0 8px 18px rgba(68,145,200,.22); font-weight:800; transition:transform .2s, box-shadow .2s, filter .2s; }
+  .primary-btn:hover { transform:translateY(-2px); box-shadow:0 12px 22px rgba(68,145,200,.3); filter:saturate(1.08); }
+  .side-column { display:grid; grid-template-rows:1fr 1fr; gap:20px; }
+  .friend-card { padding:22px 22px 18px; display:flex; flex-direction:column; min-height:260px; }
+  .friend-top { display:flex; justify-content:space-between; gap:10px; align-items:center; }
+  .friend-label { font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:900; color:#77a3c7; }
+  .tap-hint { color:#8daac0; background:#edf8ff; border-radius:999px; font-size:10px; padding:6px 9px; white-space:nowrap; }
+  .character-button { align-self:center; position:relative; width:174px; height:126px; padding:0; border:0; margin:10px auto 1px; cursor:pointer; background:transparent; touch-action:manipulation; transition:transform .2s; }
+  .character-button:hover { transform:translateY(-3px) rotate(-1deg); }
+  .character-button svg { width:100%; height:100%; overflow:visible; filter:drop-shadow(0 10px 7px rgba(68,132,176,.14)); }
+  .friend-card h3 { margin:3px 0 5px; color:#345f83; font-family:Georgia,serif; font-size:1.3rem; font-weight:500; text-align:center; }
+  .friend-card .friend-text { text-align:center; margin:0 auto; color:#7894ab; font-size:.84rem; line-height:1.55; max-width:265px; }
+  .friend-foot { display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin-top:11px; }
+  .pill { border:1px solid rgba(126,179,215,.25); border-radius:999px; padding:5px 9px; font-size:10px; color:#6f9ab9; background:rgba(241,249,255,.8); }
+  .message-strip { margin-top:20px; padding:20px 23px; display:flex; gap:15px; align-items:center; justify-content:center; text-align:center; }
+  .message-strip .seal-stamp { flex:none; display:grid; place-items:center; width:45px;height:45px;border-radius:16px; background:#e3f4ff; font-size:23px; transform:rotate(-5deg); }
+  .message-strip p { margin:0; color:#547b9d; line-height:1.7; font-family:Georgia,serif; font-size:clamp(.97rem,2vw,1.13rem); }
+  .message-strip strong { color:#3977a8; font-weight:600; }
+  .footer { text-align:center; padding:26px 10px 0; color:#85a2ba; font-size:12px; letter-spacing:.025em; }
+  .footer .footer-heart { color:#73b7e7; }
+  /* SVG character motion */
+  .seal-body { transform-origin:50% 75%; animation:sealBreathe 3.1s ease-in-out infinite; }
+  .seal-blink, .cat-blink { transform-origin:center; animation:blink 5s infinite; }
+  .seal-flipper-left { transform-origin:66px 91px; animation:flipper 3s ease-in-out infinite; }
+  .seal-flipper-right { transform-origin:137px 91px; animation:flipper 3s ease-in-out infinite reverse; }
+  .cat-tail { transform-origin:138px 71px; animation:tailWag 2.4s ease-in-out infinite; }
+  .cat-body { transform-origin:50% 90%; animation:catBreathe 3.7s ease-in-out infinite; }
+  .friend-card.is-wiggling .seal-body { animation:sealDance .75s ease-in-out; }
+  .friend-card.is-wiggling .seal-flipper-left { animation:clapLeft .65s ease-in-out 2; }
+  .friend-card.is-wiggling .seal-flipper-right { animation:clapRight .65s ease-in-out 2; }
+  .friend-card.is-wiggling .cat-body { animation:catBounce .7s ease-in-out 2; }
+  .friend-card.is-wiggling .cat-tail { animation:tailZoom .45s ease-in-out 4; }
+  .flower-card.is-celebrating #flowerSvg { animation:flowerCelebrate .85s ease-in-out, flowerFloat 5.5s 0.85s ease-in-out infinite; }
+  .flower-card.is-celebrating #flowerSvg .flower-head { animation:openFlower .95s cubic-bezier(.2,.83,.28,1.2); }
+  /* Little floating bits */
+  .float-layer { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:8; }
+  .floatie { position:absolute; bottom:-30px; opacity:0; animation:floatUp 2.1s ease-out forwards; filter:drop-shadow(0 2px 3px rgba(61,121,165,.12)); }
+  .toast-backdrop { position:fixed; z-index:20; inset:0; display:grid; place-items:center; padding:18px; background:rgba(30,69,102,.23); backdrop-filter:blur(8px); opacity:0; visibility:hidden; transition:opacity .25s, visibility .25s; }
+  .toast-backdrop.open { opacity:1; visibility:visible; }
+  .love-note { position:relative; width:min(440px,100%); padding:30px 26px 25px; border-radius:28px; border:1px solid rgba(255,255,255,.95); background:linear-gradient(150deg,#fff 0%,#eff9ff 100%); text-align:center; box-shadow:0 25px 90px rgba(24,69,110,.23); transform:translateY(15px) scale(.97); transition:transform .3s cubic-bezier(.2,.8,.2,1); }
+  .toast-backdrop.open .love-note { transform:translateY(0) scale(1); }
+  .note-close { position:absolute; top:13px; right:14px; width:33px;height:33px; border:0; cursor:pointer; border-radius:50%; color:#6c91af; background:#e9f6ff; font-size:20px; }
+  .note-icon { width:67px;height:67px; margin:0 auto 15px; display:grid; place-items:center; border-radius:23px; background:linear-gradient(140deg,#e1f4ff,#f9e8f2); font-size:31px; box-shadow:inset 0 0 0 1px #fff; }
+  .love-note h2 { font-family:Georgia,serif; color:#2b5b84; font-weight:500; font-size:1.75rem; margin:0 0 10px; }
+  .love-note p { color:#6286a5; line-height:1.8; margin:0 auto; font-size:1rem; }
+  .note-signature { margin-top:18px; font-family:Georgia,serif; font-style:italic; color:#6caad7; }
+  .welcome { position:fixed; z-index:30; inset:0; display:grid; place-items:center; padding:18px; background:linear-gradient(150deg,rgba(212,240,255,.98),rgba(240,249,255,.98)); transition:opacity .55s, visibility .55s; }
+  .welcome.hidden { opacity:0; visibility:hidden; pointer-events:none; }
+  .welcome-card { width:min(520px,100%); text-align:center; padding:38px 26px 31px; background:rgba(255,255,255,.77); border:1px solid white; box-shadow:0 25px 80px rgba(75,142,188,.2); border-radius:34px; animation:fadeUp .8s ease both; }
+  .welcome-emojis { font-size:38px; letter-spacing:7px; filter:drop-shadow(0 5px 10px rgba(66,137,180,.12)); animation:bob 3s ease-in-out infinite; }
+  .welcome-card h2 { font-family:Georgia,serif; font-size:clamp(1.9rem,6vw,2.7rem); line-height:1.15; margin:22px 0 12px; font-weight:500; color:#204a76; }
+  .welcome-card p { margin:0 auto; max-width:390px; color:#6789a7; line-height:1.8; }
+  .welcome-card .primary-btn { margin-top:23px; padding:14px 23px; }
+  .welcome-tiny { margin-top:17px; color:#9bb4c9; font-size:11px; }
+  .reduced-motion *, .reduced-motion *::before, .reduced-motion *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes cloudDrift { from { transform:translateX(-30px) scale(var(--scale,1)); } to { transform:translateX(calc(100vw + 300px)) scale(var(--scale,1)); } }
+  @keyframes twinkle { 0%,100%{opacity:.32;transform:scale(.85) rotate(0)}50%{opacity:.9;transform:scale(1.12) rotate(15deg)} }
+  @keyframes heartbeat { 0%,100%{transform:scale(1)} 12%{transform:scale(1.22)} 24%{transform:scale(1)} 36%{transform:scale(1.14)} 48%{transform:scale(1)} }
+  @keyframes bloomIn { 0%{transform:scale(.08) rotate(-15deg);opacity:.2} 65%{transform:scale(1.07) rotate(3deg);opacity:1} 100%{transform:scale(1) rotate(0)} }
+  @keyframes flowerFloat { 0%,100%{transform:translateY(0) rotate(-.6deg)}50%{transform:translateY(-7px) rotate(.7deg)} }
+  @keyframes flowerCelebrate { 0%,100%{transform:rotate(0) scale(1)} 25%{transform:rotate(-5deg) scale(1.04)} 60%{transform:rotate(4deg) scale(1.07)} }
+  @keyframes openFlower { 0%{transform:scale(.88) rotate(-7deg)} 55%{transform:scale(1.16) rotate(5deg)}100%{transform:scale(1) rotate(0)} }
+  @keyframes sealBreathe {0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-2px) scaleY(1.015)} }
+  @keyframes blink {0%,45%,48%,100%{transform:scaleY(1)}46.5%{transform:scaleY(.08)} }
+  @keyframes flipper {0%,100%{transform:rotate(0)}50%{transform:rotate(-11deg)} }
+  @keyframes sealDance {0%,100%{transform:translateX(0) rotate(0) scale(1)}20%{transform:translateX(-10px) rotate(-8deg) scale(1.02)}45%{transform:translateX(7px) rotate(8deg) scale(1.04)}70%{transform:translateX(-4px) rotate(-5deg)} }
+  @keyframes clapLeft {0%,100%{transform:rotate(0)}50%{transform:rotate(35deg)} }
+  @keyframes clapRight {0%,100%{transform:rotate(0)}50%{transform:rotate(-35deg)} }
+  @keyframes catBreathe {0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2px) scale(1.01)} }
+  @keyframes catBounce {0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-15px) rotate(-4deg)}65%{transform:translateY(-4px) rotate(3deg)} }
+  @keyframes tailWag {0%,100%{transform:rotate(-4deg)}50%{transform:rotate(10deg)} }
+  @keyframes tailZoom {0%,100%{transform:rotate(-6deg)}50%{transform:rotate(22deg)} }
+  @keyframes floatUp {0%{opacity:0; transform:translateY(0) scale(.5) rotate(0)}12%{opacity:1}100%{opacity:0; transform:translateY(-240px) scale(1.2) rotate(25deg)} }
+  @keyframes bob {0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)} }
+  @media(max-width:760px) {
+    .page {width:min(600px, calc(100% - 22px)); padding-top:13px;}
+    .topbar {padding-bottom:12px;}
+    .brand {font-size:11px; letter-spacing:.05em;}
+    .sound-toggle {padding:9px 11px; font-size:11px;}
+    .hero {padding:23px 4px 15px;}
+    .garden {grid-template-columns:1fr; gap:14px; margin-top:10px;}
+    .flower-card {min-height:unset; padding:22px 15px 23px;}
+    .flower-stage {width:min(100%, 350px); margin:7px auto -4px;}
+    .side-column {grid-template-rows:auto auto; gap:14px;}
+    .friend-card {min-height:245px; padding:18px 18px 17px;}
+    .character-button {height:112px; width:160px;}
+    .message-strip {margin-top:14px; padding:17px 15px; gap:11px;}
+    .message-strip .seal-stamp {width:39px;height:39px;font-size:20px;}
+  }
+  @media(prefers-reduced-motion: reduce) {
+    *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; }
+  }
+</style>
+</head>
+<body>
+<div class="sky-decor" aria-hidden="true">
+  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+  <span class="star s1">✦</span><span class="star s2">✧</span><span class="star s3">✦</span><span class="star s4">✧</span>
+</div>
+<div class="float-layer" id="floatLayer" aria-hidden="true"></div>
+
+<div class="welcome" id="welcome" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+  <div class="welcome-card">
+    <div class="welcome-emojis" aria-hidden="true"> 🦭 </div>
+    <h2 id="welcomeTitle">A little world made just for you, my beautiful <span style="color:#559bd3;font-style:italic">Shai</span> 💙</h2>
+    <p>A tiny blue garden full of paper flowers, silly little friends, and reminders that you deserve softness, comfort, and happy moments.</p>
+    <button class="primary-btn" id="enterGarden">Come inside, Shai </button>
+    <div class="welcome-tiny">made with a pocketful of love & a sprinkle of blue magic</div>
+  </div>
+</div>
+
+<main class="page">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">✿</span> Shai's little blue garden</div>
+    <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="false">♫ Sound: off</button>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow"><span>☁</span> a tiny handmade corner of the world <span>♡</span></div>
+    <h1>A little world made just for you, my beautiful <span class="shai">Shai</span> <span class="tiny-heart">♥</span></h1>
+    <p>For days that feel like sunshine, and for days that need a little extra gentleness. Here, a flower is always blooming just for you.</p>
+  </section>
+
+  <section class="garden" aria-label="Shai's interactive blue garden">
+    <article class="paper-card flower-card" id="flowerCard">
+      <div class="section-kicker">✦ your one-of-a-kind paper flower ✦</div>
+      <button class="flower-stage" id="flowerButton" type="button" aria-label="Click your origami flower for a little magic">
+        <svg id="flowerSvg" viewBox="0 0 420 500" role="img" aria-label="A handmade blue origami flower"></svg>
+      </button>
+      <div class="flower-caption">
+        <h2 id="flowerName">A little bloom for you</h2>
+        <p id="flowerSubtitle">Every fold holds a tiny wish for your happiness.</p>
+        <button class="primary-btn" id="newFlower" type="button">Fold me another flower </button>
+      </div>
+    </article>
+
+    <div class="side-column">
+      <article class="paper-card friend-card" id="sealCard">
+        <div class="friend-top"><span class="friend-label">your tiny cuddle buddy</span><span class="tap-hint">tap me! ♡</span></div>
+        <button class="character-button" id="sealButton" type="button" aria-label="Tap the cute seal for a message">
+          <svg viewBox="0 0 200 135" role="img" aria-label="A cute round baby-blue seal">
+            <defs>
+              <linearGradient id="sealFur" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#f8fdff"/><stop offset=".58" stop-color="#d7efff"/><stop offset="1" stop-color="#abd9f4"/></linearGradient>
+              <linearGradient id="sealBelly" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#eaf7ff"/></linearGradient>
+            </defs>
+            <ellipse cx="100" cy="119" rx="55" ry="8" fill="#92c8e8" opacity=".22"/>
+            <g class="seal-body">
+              <path d="M64 88 Q32 111 48 119 Q65 122 82 100Z" fill="#b5def5" stroke="#8fc6e9" stroke-width="1.5" class="seal-flipper-left"/>
+              <path d="M136 88 Q169 111 152 119 Q135 122 118 100Z" fill="#b5def5" stroke="#8fc6e9" stroke-width="1.5" class="seal-flipper-right"/>
+              <ellipse cx="100" cy="78" rx="53" ry="43" fill="url(#sealFur)" stroke="#8dbfe0" stroke-width="1.5"/>
+              <ellipse cx="100" cy="91" rx="33" ry="22" fill="url(#sealBelly)" opacity=".95"/>
+              <ellipse cx="78" cy="78" rx="8" ry="10" fill="#f5a9c4" opacity=".7"/><ellipse cx="122" cy="78" rx="8" ry="10" fill="#f5a9c4" opacity=".7"/>
+              <g class="seal-blink" fill="#284a67"><ellipse cx="82" cy="68" rx="3.7" ry="5.5"/><ellipse cx="118" cy="68" rx="3.7" ry="5.5"/></g>
+              <ellipse cx="100" cy="79" rx="6.5" ry="4.6" fill="#355d7a"/>
+              <path d="M94 86 Q100 93 106 86" fill="none" stroke="#577b95" stroke-width="2" stroke-linecap="round"/>
+              <path d="M66 55 Q74 39 90 42" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".9"/>
+              <circle cx="142" cy="54" r="3" fill="#fff" opacity=".9"/>
+              <path d="M69 36 Q60 25 52 32 Q50 42 65 43Z" fill="#e2f4ff" stroke="#a5d1ec"/>
+              <path d="M130 36 Q141 25 149 32 Q151 42 136 43Z" fill="#e2f4ff" stroke="#a5d1ec"/>
+            </g>
+            <path d="M155 35 Q162 24 170 31 Q178 40 164 47" fill="none" stroke="#71b9e7" stroke-width="2.5" stroke-linecap="round"/>
+            <text x="32" y="41" fill="#6eadd7" font-size="15">✦</text><text x="162" y="85" fill="#e99abb" font-size="13">♡</text>
+          </svg>
+        </button>
+        <h3>Bobo the baby seal 🦭</h3>
+        <p class="friend-text">A squishy little friend who brought a pocket full of hugs for you.</p>
+        <div class="friend-foot"><span class="pill">professional hug-giver</span><span class="pill">100% soft</span></div>
+      </article>
+
+      <article class="paper-card friend-card" id="catCard">
+        <div class="friend-top"><span class="friend-label">your tiny sleepy kitty</span><span class="tap-hint">tap me! ♡</span></div>
+        <button class="character-button" id="catButton" type="button" aria-label="Tap the cute cat for a comforting message">
+          <svg viewBox="0 0 200 135" role="img" aria-label="A cute white cat with blue details">
+            <defs>
+              <linearGradient id="catCoat" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#deeffa"/></linearGradient>
+            </defs>
+            <ellipse cx="101" cy="119" rx="50" ry="7" fill="#92c8e8" opacity=".22"/>
+            <g class="cat-tail"><path d="M137 91 Q167 94 157 67 Q154 58 164 56" fill="none" stroke="#d5eafa" stroke-width="13" stroke-linecap="round"/><path d="M137 91 Q167 94 157 67 Q154 58 164 56" fill="none" stroke="#91c3e4" stroke-width="1.5" stroke-linecap="round"/></g>
+            <g class="cat-body">
+              <ellipse cx="100" cy="89" rx="43" ry="29" fill="url(#catCoat)" stroke="#a3c9e5" stroke-width="1.5"/>
+              <ellipse cx="69" cy="109" rx="15" ry="7" fill="#fdfefe" stroke="#b5d5eb"/>
+              <ellipse cx="121" cy="109" rx="15" ry="7" fill="#fdfefe" stroke="#b5d5eb"/>
+              <path d="M62 59 L60 22 Q61 15 68 21 L90 42Z" fill="#f8fcff" stroke="#9fc9e7" stroke-width="1.5"/><path d="M138 59 L140 22 Q139 15 132 21 L110 42Z" fill="#f8fcff" stroke="#9fc9e7" stroke-width="1.5"/>
+              <path d="M67 42 L66 29 L80 42Z" fill="#efb5ce"/><path d="M133 42 L134 29 L120 42Z" fill="#efb5ce"/>
+              <ellipse cx="100" cy="61" rx="41" ry="33" fill="url(#catCoat)" stroke="#9fc8e4" stroke-width="1.5"/>
+              <path d="M73 49 Q82 39 91 50" fill="none" stroke="#7db6df" stroke-width="5" stroke-linecap="round"/><path d="M109 50 Q118 39 127 49" fill="none" stroke="#7db6df" stroke-width="5" stroke-linecap="round"/>
+              <g class="cat-blink" fill="#284d6e"><ellipse cx="84" cy="61" rx="3.5" ry="5"/><ellipse cx="116" cy="61" rx="3.5" ry="5"/></g>
+              <path d="M96 71 Q100 67 104 71 Q100 76 96 71" fill="#e99bb8"/><path d="M100 76 Q94 82 90 77 M100 76 Q106 82 110 77" fill="none" stroke="#6f8fa9" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M72 72 L51 68 M73 78 L53 80 M128 72 L149 68 M127 78 L147 80" stroke="#86aac6" stroke-width="1.5" stroke-linecap="round"/>
+              <ellipse cx="69" cy="68" rx="6" ry="4" fill="#f1b5ce" opacity=".7"/><ellipse cx="131" cy="68" rx="6" ry="4" fill="#f1b5ce" opacity=".7"/>
+            </g>
+            <text x="26" y="48" fill="#80bde4" font-size="14">✧</text><text x="158" y="35" fill="#e99abb" font-size="14">♡</text>
+          </svg>
+        </button>
+        <h3>JohhyCat the sleepy kitty </h3>
+        <p class="friend-text">A tiny cat with a big heart, here to remind you to be gentle with yourself.</p>
+        <div class="friend-foot"><span class="pill">nap enthusiast</span><span class="pill">your little cheerleader</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="paper-card message-strip" aria-label="A little reminder for Shai">
+    <div class="seal-stamp" aria-hidden="true">🫧</div>
+    <p><strong>A little reminder, my Shai:</strong> you don't have to be okay every second. Take your time, breathe, and rest when you need to. You deserve the same effort you give to your works <span style="color:#76b6e2">♡</span></p>
+  </section>
+
+  <footer class="footer">folded from little wishes, soft clouds, and lots of care <span class="footer-heart">♥</span></footer>
+</main>
+
+<div class="toast-backdrop" id="messageBackdrop" role="dialog" aria-modal="true" aria-labelledby="messageTitle" aria-hidden="true">
+  <div class="love-note">
+    <button class="note-close" id="closeMessage" type="button" aria-label="Close message">×</button>
+    <div class="note-icon" id="messageIcon">💌</div>
+    <h2 id="messageTitle">A little note for you</h2>
+    <p id="messageText"></p>
+    <div class="note-signature">always cheering for you ♡</div>
+    <button class="primary-btn" id="messageOkay" type="button">I'll keep this close 💙</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const flowerSvg = $('#flowerSvg');
+  const flowerCard = $('#flowerCard');
+  const floatLayer = $('#floatLayer');
+  const backdrop = $('#messageBackdrop');
+  let soundOn = false;
+  let audioCtx = null;
+  let lastFocus = null;
+
+  const flowers = [
+    {name:'Cloud-nine daisy', type:'daisy', petals:12, palette:['#d9efff','#9dcdf1','#76b6e7','#f8fdff'], center:'pearl', subtitle:'A little piece of sky, folded just for you.'},
+    {name:'Bluebell daydream', type:'tulip', petals:7, palette:['#a9d7fb','#79b7eb','#4f91cb','#e2f5ff'], center:'star', subtitle:'May your day be soft, bright, and full of tiny joys.'},
+    {name:'Sapphire paper rose', type:'rose', petals:13, palette:['#8fc8f2','#579edb','#b7e0ff','#d8efff'], center:'spiral', subtitle:'A little reminder that beautiful things take time.'},
+    {name:'Little sakura wish', type:'sakura', petals:5, palette:['#c9e8ff','#91c6f0','#f4dced','#e7f6ff'], center:'pearl', subtitle:'May gentle moments find you wherever you are.'},
+    {name:'Moonlit forget-me-not', type:'daisy', petals:9, palette:['#bfe2ff','#81baf0','#a0d5fb','#fffaff'], center:'moon', subtitle:'Even the smallest flower can hold a very big wish.'},
+    {name:'Dreamy folded tulip', type:'tulip', petals:6, palette:['#d5ebff','#9ac9f2','#699ed4','#eff9ff'], center:'pearl', subtitle:'A paper bloom to keep a little sunshine nearby.'}
+  ];
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const colorMix = (hex, amount) => {
+    const h = hex.replace('#',''); const n = parseInt(h,16);
+    const r=n>>16, g=(n>>8)&255, b=n&255;
+    const target = amount >= 0 ? 255 : 0; const p = Math.abs(amount);
+    return '#' + [r,g,b].map(v=>Math.round(v+(target-v)*p).toString(16).padStart(2,'0')).join('');
+  };
+
+  function petalPath(type) {
+    if (type === 'tulip') return 'M 0 0 C -26 -15 -30 -48 -3 -77 C 5 -61 11 -61 21 -78 C 43 -47 28 -16 0 0 Z';
+    if (type === 'sakura') return 'M 0 0 C -19 -14 -28 -37 -11 -57 C -4 -65 3 -65 7 -55 C 26 -41 23 -14 0 0 Z';
+    if (type === 'rose') return 'M 0 0 C -27 -14 -25 -46 -8 -60 C 1 -69 12 -61 13 -48 C 29 -32 18 -10 0 0 Z';
+    return 'M 0 0 C -23 -9 -32 -37 -17 -62 Q 0 -82 17 -62 C 32 -37 23 -9 0 0 Z';
+  }
+
+  function makePetal(type, angle, radius, color, index, layer) {
+    const scale = type === 'sakura' ? 1.03 : (type === 'rose' ? .88 + (layer*.04) : 1);
+    const r = radius + (type === 'rose' ? (index%3)*3 : 0);
+    const crease = type === 'tulip' ? 'M 0 -8 Q 5 -34 8 -58' : 'M 0 -7 Q 1 -34 0 -57';
+    return `<g class="petal" transform="translate(210 183) rotate(${angle}) translate(0 ${r}) scale(${scale})">
+      <path d="${petalPath(type)}" fill="url(#petalGrad${index%4})" stroke="${colorMix(color,-.12)}" stroke-width="1.35" stroke-linejoin="round"/>
+      <path d="${crease}" fill="none" stroke="#fff" stroke-opacity=".68" stroke-width="2" stroke-linecap="round"/>
+      <path d="M -1 -10 Q -12 -28 -8 -45" fill="none" stroke="${colorMix(color,.25)}" stroke-opacity=".65" stroke-width="1.15" stroke-linecap="round"/>
+      <path d="M 0 -5 Q 11 -28 12 -43" fill="none" stroke="${colorMix(color,-.18)}" stroke-opacity=".28" stroke-width="1.1" stroke-linecap="round"/>
+    </g>`;
+  }
+
+  function centerMarkup(kind, color) {
+    if (kind === 'star') return `<path d="M210 162 l5 12 13 1 -10 8 3 12 -11 -7 -11 7 3 -12 -10 -8 13 -1Z" fill="#fff7d9" stroke="#92bddd" stroke-width="1.5"/><circle cx="210" cy="181" r="4" fill="#86b8df"/>`;
+    if (kind === 'spiral') return `<circle cx="210" cy="182" r="17" fill="#d8efff" stroke="#77acd8" stroke-width="1.8"/><path d="M209 181 C218 168 230 182 220 191 C211 199 197 190 203 179 C208 171 219 177 216 184" fill="none" stroke="#7baed7" stroke-width="3" stroke-linecap="round"/><circle cx="210" cy="182" r="3" fill="#fff"/>`;
+    if (kind === 'moon') return `<circle cx="210" cy="182" r="17" fill="#fff6d8" stroke="#93c7e9" stroke-width="1.6"/><path d="M215 168 A13 13 0 1 0 222 190 A11 11 0 0 1 215 168Z" fill="#7baed7"/><circle cx="202" cy="184" r="2" fill="#fff"/>`;
+    return `<circle cx="210" cy="182" r="16" fill="#fff9e7" stroke="#87b9df" stroke-width="1.7"/><circle cx="205" cy="177" r="4" fill="#fff" opacity=".95"/><circle cx="215" cy="187" r="3" fill="#f5d5a7"/><circle cx="202" cy="188" r="2" fill="#9bc9ea"/>`;
+  }
+
+  function renderFlower() {
+    const flower = pick(flowers);
+    const colors = flower.palette;
+    const petalCount = flower.type === 'sakura' ? 5 : (flower.type === 'rose' ? 11 + Math.floor(Math.random()*5) : flower.petals + Math.floor(Math.random()*3)-1);
+    const defs = `<defs>
+      <linearGradient id="stemGrad" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#8ccdbd"/><stop offset=".5" stop-color="#5fae9d"/><stop offset="1" stop-color="#b5e0ca"/></linearGradient>
+      ${colors.slice(0,4).map((c,i)=>`<linearGradient id="petalGrad${i}" x1="0" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="${colorMix(c,.3)}"/><stop offset=".48" stop-color="${c}"/><stop offset="1" stop-color="${colorMix(c,-.17)}"/></linearGradient>`).join('')}
+      <linearGradient id="leafGrad" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c7ebd9"/><stop offset="1" stop-color="#72b8a5"/></linearGradient>
+      <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="8"/></filter>
+    </defs>`;
+    const stem = `<path d="M210 204 C209 272 219 340 209 439" fill="none" stroke="url(#stemGrad)" stroke-width="10" stroke-linecap="round"/><path d="M210 215 C211 290 216 362 209 432" fill="none" stroke="#d5f0df" stroke-opacity=".75" stroke-width="2.3" stroke-linecap="round"/>`;
+    const leaves = `<g stroke="#6fb4a1" stroke-width="1.4" stroke-linejoin="round"><path d="M211 304 C169 261 129 278 143 311 C156 341 193 329 211 304Z" fill="url(#leafGrad)"/><path d="M211 304 Q174 305 148 296" fill="none" stroke="#e5f8e9" stroke-width="2"/><path d="M211 363 C246 322 288 335 278 365 C268 394 232 389 211 363Z" fill="url(#leafGrad)"/><path d="M211 363 Q249 365 272 351" fill="none" stroke="#e5f8e9" stroke-width="2"/><path d="M209 399 C187 380 168 390 177 407 C186 423 201 416 209 399Z" fill="#b1dec9"/></g>`;
+    const backCount = flower.type === 'rose' ? Math.ceil(petalCount*.8) : petalCount;
+    let petals = '';
+    for (let i=0;i<backCount;i++) petals += makePetal(flower.type, (360/backCount)*i + (Math.random()*5-2.5), flower.type==='rose' ? -6 : -7, colors[i%colors.length], i, 1);
+    if (flower.type === 'rose') {
+      for (let i=0;i<8;i++) petals += makePetal('rose', i*45+15, 5, colors[(i+1)%colors.length], i+1, 2);
+      for (let i=0;i<5;i++) petals += makePetal('rose', i*72+10, 16, colors[(i+2)%colors.length], i+2, 3);
+    } else if (flower.type === 'tulip') {
+      for (let i=0;i<3;i++) petals += `<g transform="translate(210 183) rotate(${i*18-18})"><path d="M0 0 C-32 -18 -27 -56 -5 -78 Q2 -64 7 -79 C33 -48 24 -17 0 0Z" fill="${colors[(i+1)%colors.length]}" stroke="${colorMix(colors[(i+1)%colors.length],-.14)}" stroke-width="1.5"/><path d="M0 -7 Q2 -41 6 -65" stroke="#fff" stroke-width="2" opacity=".7" fill="none"/></g>`;
+    }
+    const center = centerMarkup(flower.center, colors[0]);
+    const accents = Array.from({length:7},(_,i)=>{
+      const a = i*2.4;
+      const x = 210 + Math.cos(a)* (43 + (i%3)*4), y=181+Math.sin(a)*(37+(i%2)*6);
+      return `<path d="M${x} ${y-3} l1.8 3 3.3 .4 -2.5 2.2 .8 3.2 -3.2 -1.7 -2.7 1.7 .6 -3.2 -2.4 -2.2 3.3 -.4Z" fill="#fff" opacity="${.55+(i%3)*.12}"/>`;
+    }).join('');
+    flowerSvg.innerHTML = `${defs}<ellipse cx="210" cy="224" rx="85" ry="78" fill="${colors[0]}" opacity=".18" filter="url(#softGlow)"/>${stem}${leaves}<g class="flower-head">${petals}${center}${accents}</g><g opacity=".65"><path d="M123 435 Q210 421 297 435" stroke="#c5e6f5" stroke-width="1.5" fill="none" stroke-dasharray="3 7"/><path d="M136 449 Q210 440 284 449" stroke="#d6edf8" stroke-width="1" fill="none" stroke-dasharray="2 8"/></g>`;
+    $('#flowerName').textContent = flower.name;
+    $('#flowerSubtitle').textContent = flower.subtitle;
+    flowerSvg.setAttribute('aria-label', flower.name + ', a paper flower folded especially for Shai');
+    flowerCard.classList.remove('is-celebrating');
+  }
+
+  const sealMessages = [
+    'I’m always with you, Shai. I love you so much. 💙',
+    'Please be okay, sweet girl. If you need to take a rest, please do. You don’t have to do everything all at once. 🫧',
+    'Bobo says: you have done enough for today. Come here and have a pretend seal hug. 🦭',
+    'Even on your cloudy days, you are still so precious. Take things one tiny step at a time. ☁️',
+    'Tiny reminder from your seal: drink a little water, loosen your shoulders, and give yourself a moment. 💙'
+  ];
+  const catMessages = [
+    'Hey, Shai. You are allowed to rest. You are allowed to have slow days. You are still doing your best. ',
+    'JohhyCat wants you to remember: Johhny Libres Loves you so mujch. ',
+    'I hope life is gentle with you today. And when it isn’t, I hope you’ll be gentle with yourself. ',
+    'I’m always cheering for you, my Shai. Please take care of your heart, too. 💙',
+    'One little breath at a time, okay? You can pause, rest, and begin again whenever you’re ready. 🫧'
+  ];
+  const flowerMessages = [
+    'Make a wish, my Shai. It doesn’t have to be big. A little bit of peace is a beautiful wish, too. ',
+    'This flower is proof that gentle things can still be strong. Keep blooming in your own time. 💙',
+    'If today feels heavy, let this tiny paper flower remind you that brighter moments can grow again. '
+  ];
+  function showMessage(title, text, icon) {
+    lastFocus = document.activeElement;
+    $('#messageTitle').textContent = title;
+    $('#messageText').textContent = text;
+    $('#messageIcon').textContent = icon;
+    backdrop.classList.add('open'); backdrop.setAttribute('aria-hidden','false');
+    setTimeout(()=>$('#closeMessage').focus(),50);
+    burst(9, ['♡','♥','✦','🫧']);
+    if (soundOn) chime();
+  }
+  function closeMessage() {
+    backdrop.classList.remove('open'); backdrop.setAttribute('aria-hidden','true');
+    if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+  }
+  function burst(count, symbols) {
+    const w = window.innerWidth, h = window.innerHeight;
+    for (let i=0;i<count;i++) {
+      const bit = document.createElement('span'); bit.className='floatie'; bit.textContent=pick(symbols);
+      bit.style.left=(Math.random()*Math.max(40,w-30))+'px';
+      bit.style.bottom=(Math.random()*Math.min(180,h*.22))+'px';
+      bit.style.fontSize=(13+Math.random()*19)+'px'; bit.style.animationDelay=(Math.random()*.35)+'s';
+      bit.style.color=pick(['#6daee0','#90c8ed','#e79fc0','#a7d7f5','#f4c3d8']);
+      floatLayer.appendChild(bit); setTimeout(()=>bit.remove(),2700);
+    }
+  }
+  function playCharacter(card, isCat) {
+    card.classList.remove('is-wiggling'); void card.offsetWidth; card.classList.add('is-wiggling');
+    setTimeout(()=>card.classList.remove('is-wiggling'),1600);
+    burst(isCat ? 7 : 8, isCat ? ['🐾','♡','✦'] : ['🫧','♡','✦']);
+    const choices = isCat ? catMessages : sealMessages;
+    showMessage(isCat ? 'A note from JohhyCat ' : 'A little hug from Bobo 🦭', pick(choices), isCat ? '' : '🦭');
+  }
+  function chime() {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const start = audioCtx.currentTime;
+      [659.25, 783.99, 987.77].forEach((freq,i)=>{
+        const osc = audioCtx.createOscillator(); const gain=audioCtx.createGain();
+        osc.type='sine'; osc.frequency.value=freq;
+        gain.gain.setValueAtTime(.0001,start+i*.09); gain.gain.exponentialRampToValueAtTime(.055,start+i*.09+.025); gain.gain.exponentialRampToValueAtTime(.0001,start+i*.09+.32);
+        osc.connect(gain); gain.connect(audioCtx.destination); osc.start(start+i*.09); osc.stop(start+i*.09+.34);
+      });
+    } catch (e) { /* Sound is optional; keep the website usable if blocked. */ }
+  }
+
+  $('#enterGarden').addEventListener('click', () => {
+    $('#welcome').classList.add('hidden'); burst(17,['♡','✦','🫧','']);
+    if (soundOn) chime();
+  });
+  $('#newFlower').addEventListener('click', () => { renderFlower(); burst(10,['✿','♡','✦']); if (soundOn) chime(); });
+  $('#flowerButton').addEventListener('click', () => {
+    flowerCard.classList.remove('is-celebrating'); void flowerCard.offsetWidth; flowerCard.classList.add('is-celebrating');
+    burst(19,['♡','♥','✦','','🫧']);
+    if (soundOn) chime();
+    if (Math.random() < .45) setTimeout(()=>showMessage('A wish just for you ',pick(flowerMessages),''),240);
+  });
+  $('#sealButton').addEventListener('click', () => playCharacter($('#sealCard'), false));
+  $('#catButton').addEventListener('click', () => playCharacter($('#catCard'), true));
+  $('#closeMessage').addEventListener('click', closeMessage);
+  $('#messageOkay').addEventListener('click', closeMessage);
+  backdrop.addEventListener('click', (e)=>{if(e.target===backdrop) closeMessage();});
+  document.addEventListener('keydown', (e)=>{if(e.key==='Escape' && backdrop.classList.contains('open')) closeMessage();});
+  $('#soundToggle').addEventListener('click', (e)=>{
+    soundOn = !soundOn; e.currentTarget.textContent = soundOn ? '♫ Sound: on' : '♫ Sound: off'; e.currentTarget.setAttribute('aria-pressed',String(soundOn));
+    if (soundOn) chime();
+  });
+  // Randomize the paper flower on every page load; clicking refresh gives Shai a new bloom.
+  renderFlower();
+})();
+</script>
+</body>
+</html>
